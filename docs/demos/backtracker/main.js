@@ -15,20 +15,21 @@ canvas.width = 480;
 canvas.height = 320;
 
 // maze size and rescaling
-let nx = 15;
-let ny = 10;
 let dx = 32; // should be even
 let dy = 32; // sould be even
+
+let nx = canvas.width / dx;
+let ny = canvas.height / dy;
 
 let rooms = {};
 let walls = new Map();
 
 // sizes relative to one maze unit
-let room_h = 0.5;
-let room_w = 0.5;
+let room_h = 0.75;
+let room_w = 0.75;
 // instad of setting these, calculate them on the fly
-let wall_l = 0.5;
-let wall_t = 0.5;
+let wall_l = 0.75;
+let wall_t = 0.25;
 
 // for now track the 'current' room you are in
 // set to -1 to signify it has not been initialized
@@ -134,7 +135,7 @@ function reset_maze() {
 
 
 
-function get_unvisited(check) {
+function get_unvisited_rooms(check) {
 	let temp_list = [];
 	for(let rr =0; rr < check.length; rr++) {
 		if (rooms[check[rr]].visits == 0) {
@@ -151,7 +152,7 @@ function iterate_forward() {
 
 	// select the next neighbor
 	// 'random' select
-	let unvisited = get_unvisited(rooms[current_room].neighbors);
+	let unvisited = get_unvisited_rooms(rooms[current_room].neighbors);
 	//console.log('unvisited');
 	//console.log(unvisited);
 	if (unvisited.length > 0) {
@@ -165,6 +166,7 @@ function iterate_forward() {
 	}
 	else {
 		console.log('Done!');
+		play_forward = false;
 		return
 	}
 

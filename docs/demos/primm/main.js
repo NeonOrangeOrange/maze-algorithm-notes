@@ -15,20 +15,21 @@ canvas.width = 480;
 canvas.height = 320;
 
 // maze size and rescaling
-let nx = 15;
-let ny = 10;
 let dx = 32; // should be even
 let dy = 32; // sould be even
+
+let nx = canvas.width / dx;
+let ny = canvas.height / dy;
 
 let rooms = {};
 let walls = new Map();
 
 // sizes relative to one maze unit
-let room_h = 0.5;
-let room_w = 0.5;
+let room_h = 0.75;
+let room_w = 0.75;
 // instad of setting these, calculate them on the fly
-let wall_l = 0.5;
-let wall_t = 0.5;
+let wall_l = 0.75;
+let wall_t = 0.25;
 
 // for now track the 'current' room you are in
 // set to -1 to signify it has not been initialized
@@ -36,6 +37,8 @@ let last_room = -1;
 let current_room = -1;
 
 let history = [];
+
+let border_wall_ids = [];
 
 let play_forward = false;
 
@@ -130,11 +133,29 @@ function reset_maze() {
 
 	history = [current_room];
 	console.log('done resetting maze');
+	border_wall_ids = [];
+	for(let rr = 0; rr < rooms[current_room].neighbors.length; rr++) {
+		let temp_wall_id = wall_id(current_room, rooms[current_room].neighbors[rr]);
+		// console.log(temp_wall_id);
+		border_wall_ids.push(temp_wall_id);
+	}
+
+	for (let [wall_id, wall] of walls) {
+		if (border_wall_ids.includes(wall_id)) {
+			ctx.fillStyle = 'blue';
+			draw_rect(wall);
+		}
+		else if (wall.visits > 0) {
+			ctx.fillStyle = 'white';
+		}
+
+	}
+
 }
 
 
 
-function get_unvisited(check) {
+function get_unvisited_rooms(check) {
 	let temp_list = [];
 	for(let rr =0; rr < check.length; rr++) {
 		if (rooms[check[rr]].visits == 0) {
@@ -151,27 +172,49 @@ function iterate_forward() {
 
 	// select the next neighbor
 	// 'random' select
-	let unvisited = get_unvisited(rooms[current_room].neighbors);
-	//console.log('unvisited');
-	//console.log(unvisited);
-	if (unvisited.length > 0) {
-		current_room = unvisited[Math.floor(Math.random() * unvisited.length)];
-		history.push(last_room);
-	}
-	else if (history.length > 1) {
-		//console.log('time to backtrack!');
-		//console.log('popping history')
-		current_room = history.pop();
+	//
+	let removals = [];
+	console.log(border_wall_ids);
+	if (border_wall_ids.length > 0) {
+		next_wall_id = border_wall_ids[Math.floor(Math.random() * border_wall_ids.length)];
+		walls.get(next_wall_id).visits++;
+
+
+		// visit the wall and its rooms
+		room_ids = next_wall_id.split(',');
+		for (let r_idx=0; r_idx<room_ids.length; r_idx++) {
+			console.log(room_ids[r_idx]);
+			if (rooms[room_ids[r_idx]].visits == 0) {
+				// this is the unvisited room
+				current_room = room_ids[r_idx];
+
+				// for each neighbor, add wall if unvisited
+				// remove wall from border if visited
+				for (let n_idx=0; n_idx<rooms[current_room].neighbors.length; n_idx++) {
+					let temp_neighbor = rooms[current_room].neighbors[n_idx];
+					let temp_wall_id = wall_id(current_room, temp_neighbor);
+					if (rooms[temp_neighbor].visits == 0) {
+						border_wall_ids.push(temp_wall_id);
+					} else {
+						console.log('removing wall from queue');
+						console.log(temp_wall_id);
+						border_wall_ids = border_wall_ids.filter((w_id) => (w_id !== temp_wall_id));
+						removals.push(temp_wall_id);
+					}
+				}
+			}
+			rooms[room_ids[r_idx]].visits++;
+		}
+		border_wall_ids = border_wall_ids.filter((w_id) => (w_id !== next_wall_id));
+
 	}
 	else {
 		console.log('Done!');
+		play_forward = false;
 		return
 	}
 
-	rooms[current_room].visits++;
-	walls.get(wall_id(last_room, current_room)).visits++;
-
-	//console.log(current_room);
+	console.log(border_wall_ids);
 
 	// draw
 	ctx.fillStyle = 'white';
@@ -185,12 +228,27 @@ function iterate_forward() {
 
 	for (let [wall_id, wall] of walls) {
 		if (wall.visits > 0) {
+			//console.log('coloring white: ')
+			//console.log(wall_id);
+			ctx.fillStyle = 'white';
 			draw_rect(wall);
 		}
+		else if (border_wall_ids.includes(wall_id)) {
+			//console.log('coloring blue: ')
+			//console.log(wall_id);
+			ctx.fillStyle = 'blue';
+			draw_rect(wall);
+		}
+		else if (removals.includes(wall_id)){
+			ctx.fillStyle = 'black';
+			draw_rect(wall);
+		}
+
 	}
 
 	ctx.fillStyle = 'red';
 	draw_rect(rooms[current_room]);
+
 
 	//console.log(history);
 	//
