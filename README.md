@@ -1,6 +1,6 @@
 # Maze Algorithms by NeonOrangeOrange
 
-This site is live at (https://NeonOrangeOrange.github.io/maze-algorithm-notes/)[https://NeonOrangeOrange.github.io/maze-algorithm-notes/]
+This site is live at [https://NeonOrangeOrange.github.io/maze-algorithm-notes/](https://NeonOrangeOrange.github.io/maze-algorithm-notes/)
 
 This site is a work in progress. 
 
