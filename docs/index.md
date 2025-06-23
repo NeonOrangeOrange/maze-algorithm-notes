@@ -8,6 +8,9 @@ The source code (HTML/CSS/JavaScript) can be found in the `docs/demos/` folder i
 
 
 
+[Click here for maze generation]
 
-<iframe src="http://localhost:8000/demos/backtracker"  width="100%" height="480px" style="border: 2px solid black; overflow: hidden;"></iframe>
+[Click here for maze solving]
+
+[Click here for embbedable iframe demos]
 

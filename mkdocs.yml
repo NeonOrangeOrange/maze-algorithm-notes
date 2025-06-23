@@ -1,5 +1,5 @@
-site_name: My Docs
-
+site_name: Maze Algorithm Notes - NOO
+repo_url: https://github.com/NeonOrangeOrange/maze-generation-notes
 
 nav:
   - Home: index.md
