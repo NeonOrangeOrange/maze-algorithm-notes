@@ -6,9 +6,9 @@ The source code (HTML/CSS/JavaScript) can be found in the `docs/demos/` folder i
 
 
 
-<iframe src="http://localhost:8000/demos/backtracker"  width="100%" height="480px" style="border: 2px solid black; overflow: hidden;"></iframe>
+<iframe src="https://neonorangeorange.github.io/maze-algorithm-notes/demos/backtracker"  width="100%" height="480px" style="border: 2px solid black; overflow: hidden;"></iframe>
 
 
 
 
-<iframe src="http://localhost:8000/demos/primm"  width="100%" height="480px" style="border: 2px solid black; overflow: hidden;"></iframe>
+<iframe src="https://neonorangeorange.github.io/maze-algorithm-notes/demos/primm"  width="100%" height="480px" style="border: 2px solid black; overflow: hidden;"></iframe>
