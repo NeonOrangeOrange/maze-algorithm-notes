@@ -1,0 +1,25 @@
+
+h1, h2, h3  {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: auto;
+}
+
+
+div {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+canvas {
+	height: 320px;
+	width: 480px;
+	margin: auto;
+	border: 2px solid gray;
+	background: black;
+	object-fit: fill;
+	image-rendering: pixelated;
+}
+
